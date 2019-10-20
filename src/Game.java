@@ -13,7 +13,8 @@ public class Game extends Canvas implements Runnable {
         handler = new Handler();
         this.addKeyListener(new KeyInput(handler));
 
-        handler.addObject(new Tank(100, 100, ID.Player, handler));
+        handler.addObject(new Tank(100,100, ID.Player, handler));
+
     }
 
     private void start() {
