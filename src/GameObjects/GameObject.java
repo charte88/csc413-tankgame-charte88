@@ -1,19 +1,25 @@
+package GameObjects;
+
 import java.awt.*;
 
 public abstract class GameObject {
-   protected int x, y;
-   protected float velX = 0, velY = 0;
-   protected ID id;
+    int x, y;
+    float velX = 0, velY = 0;
+    protected ID id;
+    SpriteSheet ss;
 
-    public  GameObject(int x, int y, ID id) {
-       this.x = x;
-       this.y = y;
-       this.id = id;
-   }
+    GameObject(int x, int y, ID id, SpriteSheet ss) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+        this.ss = ss;
+    }
 
-   public abstract void tick();
-   public abstract void render(Graphics g);
-   public abstract Rectangle getBounds();
+    public abstract void tick();
+
+    public abstract void render(Graphics g);
+
+    public abstract Rectangle getBounds();
 
     public ID getId() {
         return id;

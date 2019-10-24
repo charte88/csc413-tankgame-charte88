@@ -1,3 +1,7 @@
+package Game;
+
+import Game.Game;
+
 import javax.swing.JFrame;
 import java.awt.Dimension;
 
