@@ -4,7 +4,10 @@ public enum ID {
     Player(),
     Player2(),
     Block(),
+    BreakableBlock(),
     Crate(),
     Bullet(),
-    Enemy();
+    Bullet2(),
+    Enemy(),
+    MovableEnemy();
 }

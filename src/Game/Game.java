@@ -143,6 +143,10 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.white);
         g.drawString("Ammo: " + ammoPlayer1,5,50);
 
+        //ammo display player 2
+        g.setColor(Color.white);
+        g.drawString("Ammo: " + ammoPlayer2,780,50);
+
         /////////////////////////////////////
         g.dispose();
         bs.show();
@@ -162,6 +166,9 @@ public class Game extends Canvas implements Runnable {
                 // wall
                 if (red == 255 && green == 0 && blue == 0)
                     handler.addObject(new Block(xx*32,yy*32, ID.Block, ss));
+                // Breakable Wall
+                if (red == 255 && green == 128 && blue == 0)
+                    handler.addObject(new BreakableBlock(xx*32,yy*32, ID.BreakableBlock, handler, ss));
                 // player 1
                 if (red == 0 && green == 0 && blue == 255)
                     handler.addObject(new Tank(xx*32,yy*32, ID.Player, handler,this, ss));
@@ -170,7 +177,7 @@ public class Game extends Canvas implements Runnable {
                     handler.addObject(new Tank(xx*32,yy*32, ID.Player2, handler,this, ss));
                 // enemy
                 if (red == 0 && green == 255 && blue == 0)
-                    handler.addObject(new Enemy(xx*32,yy*32, ID.Enemy, handler, ss));
+                    handler.addObject(new MovableEnemy(xx*32,yy*32, ID.MovableEnemy, handler, ss));
                 // crate
                 if (red == 0 && green == 255 && blue == 255)
                     handler.addObject(new Crate(xx*32,yy*32, ID.Crate, ss));
@@ -179,7 +186,7 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         new Game();
     }
 

@@ -11,9 +11,9 @@ import java.io.IOException;
 import static javax.imageio.ImageIO.read;
 
 public class Tank extends GameObject {
-    Handler handler;
-    Game game;
-    int vx, vy, angle;
+    private Handler handler;
+    private Game game;
+    private int vx, vy, angle;
     
     private final int R = 3;
     private final int ROTATIONSPEED = 4;
@@ -104,17 +104,23 @@ public class Tank extends GameObject {
     }
 
     private void shootBullet() {
+        // Limits the tank to one shot per second
         if (System.currentTimeMillis() - LastFired > 1000) {
-            if (game.ammoPlayer1 >= 1) {
-                handler.addObject(new Bullet(x + 18, y + 18, ID.Bullet, handler, ss, angle));
-                LastFired = System.currentTimeMillis();
-                game.ammoPlayer1--;
+            // Player 1
+            if (id == ID.Player) {
+                if (game.ammoPlayer1 >= 1) {
+                    handler.addObject(new Bullet(x + 19, y + 19, ID.Bullet, handler, ss, angle));
+                    LastFired = System.currentTimeMillis();
+                    game.ammoPlayer1--;
+                }
             }
-
-            if (game.ammoPlayer2 >= 1) {
-                handler.addObject(new Bullet(x + 18, y + 18, ID.Bullet, handler, ss, angle));
-                LastFired = System.currentTimeMillis();
-                game.ammoPlayer2--;
+            // Player 2
+            if (id == ID.Player2) {
+                if (game.ammoPlayer2 >= 1) {
+                    handler.addObject(new Bullet(x + 19, y + 19, ID.Bullet2, handler, ss, angle));
+                    LastFired = System.currentTimeMillis();
+                    game.ammoPlayer2--;
+                }
             }
         }
     }
@@ -144,38 +150,107 @@ public class Tank extends GameObject {
     private void collision() {
         for (int i=0; i<handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
-            // Colliding with unbreakable walls
+            //////////// Colliding with unbreakable walls ////////////////////
             if (tempObject.getId() == ID.Block) {
-                if (getBounds().intersects(tempObject.getBounds())) {
-                    if (handler.isDown()) {
-                        x += vx;
-                        y += vy;
-                    } else {
-                        x += vx * -1;
-                        y += vy * -1;
+                // Player 1 collision with unbreakable wall
+                if (id == ID.Player) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        if (handler.isDown()) {
+                            x += vx;
+                            y += vy;
+                        } else {
+                            x += vx * -1;
+                            y += vy * -1;
+                        }
+                    }
+                }
+                // Player 2 collision with unbreakable wall
+                if (id == ID.Player2) {
+                   // unbreakableWallCollision(tempObject);
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        if (handler.isDown2()) {
+                            x += vx;
+                            y += vy;
+                        } else {
+                            x += vx * -1;
+                            y += vy * -1;
+                        }
                     }
                 }
             }
-            // Colliding with ammo crate
-            if (tempObject.getId() == ID.Crate) {
+            /////////////////////////////////////////////////////////////
+
+            /////////// Colliding with breakable walls ///////////////////////
+            if (tempObject.getId() == ID.BreakableBlock) {
                 if (getBounds().intersects(tempObject.getBounds())) {
-                    game.ammoPlayer1 += 10;
                     handler.removeObject(tempObject);
                 }
             }
-            // Colliding with enemy
-            if (tempObject.getId() == ID.Enemy) {
-                if (getBounds().intersects(tempObject.getBounds())) {
-                    //game.hp--;
+            ///////////////////////////////////////////////////////////////
+
+            ///////////// Colliding with ammo crate ////////////////////////
+            if (tempObject.getId() == ID.Crate) {
+                // Player 1 colliding with ammo crate
+                if (id == ID.Player) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        game.ammoPlayer1 += 10;
+                        handler.removeObject(tempObject);
+                    }
+                }
+                // Player 2 colliding with ammo crate
+                if (id == ID.Player2) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        game.ammoPlayer2 += 10;
+                        handler.removeObject(tempObject);
+                    }
                 }
             }
+            ///////////////////////////////////////////////////////////////////
+
+            ////////////////// Colliding with enemy ///////////////////////////
+            if (tempObject.getId() == ID.Enemy) {
+                // Player 1 colliding with enemy
+                if (id == ID.Player) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        game.hpPlayer1--;
+                    }
+                }
+                // Player 2 colliding with enemy
+                if (id == ID.Player2) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        game.hpPlayer2--;
+                    }
+                }
+            }
+            ///////////////////////////////////////////////////////////////////
+
+            //////////////////// Bullet with player ///////////////////////////
+            // Player 1 hit with bullet
+            if (tempObject.getId() == ID.Bullet) {
+                if (id == ID.Player2) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        game.hpPlayer2 -= 10;
+                        handler.removeObject(tempObject);
+                    }
+                }
+            }
+            // Player 2 hit with bullet
+            if (tempObject.getId() == ID.Bullet2) {
+                if (id == ID.Player) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        game.hpPlayer1 -= 10;
+                        handler.removeObject(tempObject);
+                    }
+                }
+            }
+            //////////////////////////////////////////////////////////////////
         }
-        if (game.hpPlayer1 <= 0) handler.removeObject(this);
+        //if (game.hpPlayer1 <= 0) handler.removeObject(this);
     }
 
     public void render(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
-        rotation.rotate(Math.toRadians(angle), 48 / 2.0, 48 / 2.0);
+        rotation.rotate(Math.toRadians(angle), this.tank_image.getWidth() / 2.0, this.tank_image.getHeight() / 2.0);
         //Shape rotatedBounds = rotation.createTransformedShape(getBounds());
         Graphics2D g2d = (Graphics2D) g;
 
@@ -202,6 +277,6 @@ public class Tank extends GameObject {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y,48,48);
+        return new Rectangle(x, y, this.tank_image.getWidth(),this.tank_image.getHeight());
     }
 }

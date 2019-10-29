@@ -6,7 +6,7 @@ public class Bullet extends GameObject {
     private Handler handler;
     private final int R = 8;
 
-    public Bullet(int x, int y, ID id, Handler handler, SpriteSheet ss, int angle) {
+    Bullet(int x, int y, ID id, Handler handler, SpriteSheet ss, int angle) {
         super(x, y, id, ss);
         this.handler = handler;
 
@@ -26,20 +26,25 @@ public class Bullet extends GameObject {
         for (int i=0; i<handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
 
-            if (tempObject.getId() == ID.Block) {
+            if (tempObject.getId() == ID.Block)  {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     handler.removeObject(this);
                 }
             }
+
         }
     }
 
     public void render(Graphics g) {
         g.setColor(Color.green);
-        g.fillOval(x, y, 18,18);
+        g.fillOval(x, y, 20,20);
+
+        Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.white);
+        g2d.draw(getBounds());
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y,18,18);
+        return new Rectangle(x, y,20,20);
     }
 }
