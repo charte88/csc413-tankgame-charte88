@@ -23,7 +23,7 @@ public class BreakableBlock extends GameObject {
             GameObject tempObject = handler.object.get(i);
             if (tempObject.getId() == ID.Bullet) {
                 if (getBounds().intersects(tempObject.getBounds())) {
-                    hp -= 50;
+                    hp -= 100;
                     handler.removeObject(tempObject);
                 }
             }

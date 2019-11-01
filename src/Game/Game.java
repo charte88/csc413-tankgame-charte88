@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 
 public class Game extends Canvas implements Runnable {
     private static final long serialVersionUID = 1L;
+
     private boolean isRunning = false;
     private Thread thread;
     private Handler handler;
@@ -18,11 +19,13 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage sprite_sheet = null;
     private BufferedImage floor = null;
 
-    public int ammoPlayer1 = 100;
     public int hpPlayer1 = 100;
+    public int ammoPlayer1 = 20;
+    public int pointsPlayer1 = 0;
 
-    public int ammoPlayer2 = 100;
     public int hpPlayer2 = 100;
+    public int ammoPlayer2 = 20;
+    public int pointsPlayer2 = 0;
 
     public Game() {
         handler = new Handler();
@@ -34,7 +37,8 @@ public class Game extends Canvas implements Runnable {
 
 
         BufferedImageLoader loader = new BufferedImageLoader();
-        level = loader.loadImage("/Tank_Level.png");
+        level = loader.loadImage("/Tank_Level_Big.png");
+        //level = loader.loadImage("/Tank_Level.png");
         sprite_sheet = loader.loadImage("/sprite_sheet.png");
 
         ss = new SpriteSheet(sprite_sheet);
@@ -46,13 +50,13 @@ public class Game extends Canvas implements Runnable {
         loadLevel(level);
     }
 
-    private void start() {
+    private synchronized void start() {
         isRunning = true;
         thread = new Thread(this);
         thread.start();
     }
 
-    private void stop() {
+    private synchronized void stop() {
        isRunning = false;
         try {
             thread.join();
@@ -106,7 +110,8 @@ public class Game extends Canvas implements Runnable {
 
         Graphics g = bs.getDrawGraphics();
         Graphics2D g2d = (Graphics2D) g;
-        /////////////////////////////////////
+        //////////////////////////////////////////////
+        //// This is where graphics is displayed /////
 
         //g.setColor(Color.red);
         //g.fillRect(0,0, 1000, 563);
@@ -131,6 +136,14 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.black);
         g.drawRect(5,5,200,32);
 
+        //ammo display player 1
+        g.setColor(Color.white);
+        g.drawString("Ammo: " + ammoPlayer1,10,50);
+
+        //Player 1 total points
+        g.setColor(Color.GREEN);
+        g.drawString("Points: " + pointsPlayer1, 110, 50);
+
         //hp Player 2 display
         g.setColor(Color.gray);
         g.fillRect(780,5,200,32);
@@ -139,14 +152,15 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.black);
         g.drawRect(780,5,200,32);
 
-        //ammo display player 1
-        g.setColor(Color.white);
-        g.drawString("Ammo: " + ammoPlayer1,5,50);
-
         //ammo display player 2
         g.setColor(Color.white);
-        g.drawString("Ammo: " + ammoPlayer2,780,50);
+        g.drawString("Ammo: " + ammoPlayer2,790,50);
 
+        //Player 2 total points
+        g.setColor(Color.GREEN);
+        g.drawString("Points: " + pointsPlayer2, 890, 50);
+
+        ///// End of Graphics Displayed /////
         /////////////////////////////////////
         g.dispose();
         bs.show();
@@ -177,10 +191,15 @@ public class Game extends Canvas implements Runnable {
                     handler.addObject(new Tank(xx*32,yy*32, ID.Player2, handler,this, ss));
                 // enemy
                 if (red == 0 && green == 255 && blue == 0)
-                    handler.addObject(new MovableEnemy(xx*32,yy*32, ID.MovableEnemy, handler, ss));
+                    handler.addObject(new MovableEnemy(xx*32,yy*32, ID.MovableEnemy, handler,this, ss));
+                //if (red == 125 && green == 125 && blue == 0)
+                    //handler.addObject(new FollowEnemy(xx*32,yy*32, ID.FollowEnemy, handler,this, ss));
                 // crate
                 if (red == 0 && green == 255 && blue == 255)
                     handler.addObject(new Crate(xx*32,yy*32, ID.Crate, ss));
+                // overshield
+                if (red == 200 && green == 0 && blue == 200)
+                    handler.addObject(new Overshield(xx*32,yy*32, ID.Overshield, ss));
             }
         }
 

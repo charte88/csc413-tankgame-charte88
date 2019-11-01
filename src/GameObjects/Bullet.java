@@ -6,6 +6,7 @@ public class Bullet extends GameObject {
     private Handler handler;
     private final int R = 8;
 
+
     Bullet(int x, int y, ID id, Handler handler, SpriteSheet ss, int angle) {
         super(x, y, id, ss);
         this.handler = handler;

@@ -18,7 +18,11 @@ public class Tank extends GameObject {
     private final int R = 3;
     private final int ROTATIONSPEED = 4;
 
-    private long LastFired = 0;
+    private boolean isOvershieldPlayer1 = false;
+    private boolean isOvershieldPlayer2 = false;
+
+    private long lastTrueTime = 0;
+    private long lastFired = 0;
 
     private BufferedImage tank_image;
     //private BufferedImage wizard_image;
@@ -105,12 +109,12 @@ public class Tank extends GameObject {
 
     private void shootBullet() {
         // Limits the tank to one shot per second
-        if (System.currentTimeMillis() - LastFired > 1000) {
+        if (System.currentTimeMillis() - lastFired > 1000) {
             // Player 1
             if (id == ID.Player) {
                 if (game.ammoPlayer1 >= 1) {
                     handler.addObject(new Bullet(x + 19, y + 19, ID.Bullet, handler, ss, angle));
-                    LastFired = System.currentTimeMillis();
+                    lastFired = System.currentTimeMillis();
                     game.ammoPlayer1--;
                 }
             }
@@ -118,7 +122,7 @@ public class Tank extends GameObject {
             if (id == ID.Player2) {
                 if (game.ammoPlayer2 >= 1) {
                     handler.addObject(new Bullet(x + 19, y + 19, ID.Bullet2, handler, ss, angle));
-                    LastFired = System.currentTimeMillis();
+                    lastFired = System.currentTimeMillis();
                     game.ammoPlayer2--;
                 }
             }
@@ -154,28 +158,11 @@ public class Tank extends GameObject {
             if (tempObject.getId() == ID.Block) {
                 // Player 1 collision with unbreakable wall
                 if (id == ID.Player) {
-                    if (getBounds().intersects(tempObject.getBounds())) {
-                        if (handler.isDown()) {
-                            x += vx;
-                            y += vy;
-                        } else {
-                            x += vx * -1;
-                            y += vy * -1;
-                        }
-                    }
+                    unbreakableWallCollision(tempObject);
                 }
                 // Player 2 collision with unbreakable wall
                 if (id == ID.Player2) {
-                   // unbreakableWallCollision(tempObject);
-                    if (getBounds().intersects(tempObject.getBounds())) {
-                        if (handler.isDown2()) {
-                            x += vx;
-                            y += vy;
-                        } else {
-                            x += vx * -1;
-                            y += vy * -1;
-                        }
-                    }
+                    unbreakableWallCollision(tempObject);
                 }
             }
             /////////////////////////////////////////////////////////////
@@ -207,38 +194,83 @@ public class Tank extends GameObject {
             }
             ///////////////////////////////////////////////////////////////////
 
+            ///////////// Colliding with Overshield ////////////////////////
+            if (tempObject.getId() == ID.Overshield) {
+                // Player 1 colliding with overshield powerup
+                if (id == ID.Player) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        isOvershieldPlayer1 = true;
+                        lastTrueTime = System.currentTimeMillis();
+                        handler.removeObject(tempObject);
+                    }
+                }
+                // Player 2 colliding with overshield powerup
+                if (id == ID.Player2) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        isOvershieldPlayer2 = true;
+                        lastTrueTime = System.currentTimeMillis();
+                        handler.removeObject(tempObject);
+                    }
+                }
+            }
+            ///////////////////////////////////////////////////////////////////
+
             ////////////////// Colliding with enemy ///////////////////////////
             if (tempObject.getId() == ID.Enemy) {
                 // Player 1 colliding with enemy
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        game.hpPlayer1--;
+                        if (overshield1Timer()) {
+                            game.hpPlayer1--;
+                        } else {
+                            game.hpPlayer1 -= 2;
+                        }
                     }
                 }
                 // Player 2 colliding with enemy
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        game.hpPlayer2--;
+                        if (overshield2Timer()) {
+                            game.hpPlayer2--;
+                        } else {
+                            game.hpPlayer2 -= 2;
+                        }
                     }
                 }
             }
             ///////////////////////////////////////////////////////////////////
 
             //////////////////// Bullet with player ///////////////////////////
-            // Player 1 hit with bullet
+            // Player 2 hit with bullet
             if (tempObject.getId() == ID.Bullet) {
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        game.hpPlayer2 -= 10;
+                        if (overshield2Timer()) {
+                            System.out.println("Player2 Health: " + game.hpPlayer2);
+                            game.hpPlayer2 -= 5;
+                            System.out.println("Player2 Health: " + game.hpPlayer2);
+                        } else {
+                            System.out.println("Player2 Health: " + game.hpPlayer2);
+                            game.hpPlayer2 -= 10;
+                            System.out.println("Player2 Health: " + game.hpPlayer2);
+                        }
                         handler.removeObject(tempObject);
                     }
                 }
             }
-            // Player 2 hit with bullet
+            // Player 1 hit with bullet
             if (tempObject.getId() == ID.Bullet2) {
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        game.hpPlayer1 -= 10;
+                        if (overshield1Timer()) {
+                            System.out.println("Player1 Health: " + game.hpPlayer1);
+                            game.hpPlayer1 -= 5;
+                            System.out.println("Player1 Health: " + game.hpPlayer1);
+                        } else {
+                            System.out.println("Player1 Health: " + game.hpPlayer1);
+                            game.hpPlayer1 -= 10;
+                            System.out.println("Player1 Health: " + game.hpPlayer1);
+                        }
                         handler.removeObject(tempObject);
                     }
                 }
@@ -246,6 +278,18 @@ public class Tank extends GameObject {
             //////////////////////////////////////////////////////////////////
         }
         //if (game.hpPlayer1 <= 0) handler.removeObject(this);
+    }
+
+    private void unbreakableWallCollision(GameObject tempObject) {
+        if (getBounds().intersects(tempObject.getBounds())) {
+            if (handler.isDown()) {
+                x += vx;
+                y += vy;
+            } else {
+                x += vx * -1;
+                y += vy * -1;
+            }
+        }
     }
 
     public void render(Graphics g) {
@@ -278,5 +322,21 @@ public class Tank extends GameObject {
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, this.tank_image.getWidth(),this.tank_image.getHeight());
+    }
+
+    private boolean overshield1Timer() {
+        if (System.currentTimeMillis() - lastTrueTime > 20000) {
+            isOvershieldPlayer1 = false;
+            return false;
+        }
+        return true;
+    }
+
+    private boolean overshield2Timer() {
+        if (System.currentTimeMillis() - lastTrueTime > 20000) {
+            isOvershieldPlayer2 = false;
+            return false;
+        }
+        return true;
     }
 }

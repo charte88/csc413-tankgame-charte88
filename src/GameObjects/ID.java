@@ -6,8 +6,10 @@ public enum ID {
     Block(),
     BreakableBlock(),
     Crate(),
+    Overshield(),
     Bullet(),
     Bullet2(),
     Enemy(),
-    MovableEnemy();
+    MovableEnemy(),
+    FollowEnemy();
 }

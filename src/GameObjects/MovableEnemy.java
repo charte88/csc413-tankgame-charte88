@@ -1,10 +1,14 @@
 package GameObjects;
 
+import Game.Game;
+
 import java.awt.*;
 import java.util.Random;
 
 public class MovableEnemy extends Enemy {
     private Handler handler;
+    private Game game;
+
     private Random r = new Random();
     private int choose = 0;
     private int hp = 100;
@@ -13,9 +17,10 @@ public class MovableEnemy extends Enemy {
     //private BufferedImage[] enemy_image = new BufferedImage[3];
     //TankGame.Animation anim;
 
-    public MovableEnemy(int x, int y, ID id, Handler handler, SpriteSheet ss) {
+    public MovableEnemy(int x, int y, ID id, Handler handler, Game game,  SpriteSheet ss) {
         super(x, y, id, ss);
         this.handler = handler;
+        this.game = game;
 
         //enemy_image = ss.grabImage(4,1,32,32);
         //enemy_image[0] = ss.grabImage(4,1,32,32);
@@ -31,7 +36,7 @@ public class MovableEnemy extends Enemy {
         x += velX;
         y += velY;
 
-        choose = r.nextInt(10);
+        choose = r.nextInt(6);
 
         collision();
 
@@ -44,8 +49,8 @@ public class MovableEnemy extends Enemy {
 
             if ((tempObject.getId() == ID.Block) || (tempObject.getId() == ID.BreakableBlock)) {
                 if (getBoundsBig().intersects(tempObject.getBounds())) {
-                    x += (velX * 4) * -1;
-                    y += (velY * 4) * -1;
+                    x += (velX * 2) * -1;
+                    y += (velY * 2) * -1;
                     velX *= -1;
                     velY *= -1;
                 } else if (choose == 0) {
@@ -57,10 +62,27 @@ public class MovableEnemy extends Enemy {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     hp -= 50;
                     handler.removeObject(tempObject);
+
+                    if (hp <= 0) {
+                        handler.removeObject(this);
+                        game.pointsPlayer1 += 20;
+                    }
+                }
+            }
+
+            if (tempObject.getId() == ID.Bullet2) {
+                if (getBounds().intersects(tempObject.getBounds())) {
+                    hp -= 50;
+                    handler.removeObject(tempObject);
+
+                    if (hp <= 0) {
+                        handler.removeObject(this);
+                        game.pointsPlayer2 += 20;
+                    }
                 }
             }
         }
-        if (hp <= 0) handler.removeObject(this);
+
     }
 
     public void render(Graphics g) {
