@@ -1,3 +1,4 @@
+/*
 package GameObjects;
 
 import Game.Game;
@@ -105,3 +106,4 @@ public class MovableEnemy extends Enemy {
         return new Rectangle(x-16, y-16,64,64);
     }
 }
+*/

@@ -1,12 +1,16 @@
 package GameObjects;
 
+import Game.Game;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyInput extends KeyAdapter {
+    //Game game;
     Handler handler;
 
     public KeyInput(Handler handler) {
+        //this.game = game;
         this.handler = handler;
     }
 
@@ -30,6 +34,7 @@ public class KeyInput extends KeyAdapter {
                 if (key == KeyEvent.VK_ENTER) handler.setShoot2(true);
             }
         }
+        //game.keyPressed(e);
     }
 
     public void keyReleased(KeyEvent e) {
@@ -52,5 +57,6 @@ public class KeyInput extends KeyAdapter {
                 if (key == KeyEvent.VK_ENTER) handler.setShoot2(false);
             }
         }
+        //game.keyReleased(e);
     }
 }

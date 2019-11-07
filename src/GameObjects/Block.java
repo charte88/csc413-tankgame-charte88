@@ -1,3 +1,4 @@
+/*
 package GameObjects;
 
 import java.awt.*;
@@ -26,3 +27,4 @@ public class Block extends GameObject {
         return new Rectangle(x, y,32,32);
     }
 }
+*/

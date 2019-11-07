@@ -6,8 +6,8 @@ public class BreakableBlock extends GameObject {
     private Handler handler;
     private int hp = 100;
 
-    public BreakableBlock(int x, int y, ID id, Handler handler, SpriteSheet ss) {
-        super(x, y, id, ss);
+    public BreakableBlock(int x, int y, ID id, Handler handler, GlobalTexture tex) {
+        super(x, y, id, tex);
         this.handler = handler;
 
         //block_image = ss.grabImage(5,2,32,32);

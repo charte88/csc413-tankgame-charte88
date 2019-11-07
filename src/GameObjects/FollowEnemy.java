@@ -1,3 +1,4 @@
+/*
 package GameObjects;
 
 import Game.Game;
@@ -32,12 +33,14 @@ public class FollowEnemy extends Enemy {
                 distance = (float) Math.sqrt((x - tempObject.getX()) * (x - tempObject.getX())
                         + (y - tempObject.getY()) * (y - tempObject.getY()));
             }
-            /*if (tempObject.getId() == ID.Player2) {
+            */
+/*if (tempObject.getId() == ID.Player2) {
                 diffX2 = x - tempObject.getX() - 48;
                 diffY2 = y - tempObject.getY() - 48;
                 distance2 = (float) Math.sqrt((x - tempObject.getX()) * (x - tempObject.getX())
                         + (y - tempObject.getY()) * (y - tempObject.getY()));
-            }*/
+            }*//*
+
         }
         if (distance < 300) {
             velX = ((-1 / distance) * diffX);
@@ -47,13 +50,15 @@ public class FollowEnemy extends Enemy {
             velY = 0;
         }
 
-        /*if (distance2 < 300) {
+        */
+/*if (distance2 < 300) {
             velX = ((-1 / distance2) * diffX);
             velY = ((-1 / distance2) * diffY);
         } else {
             velX = 0;
             velY = 0;
-        }*/
+        }*//*
+
 
         collision();
         //anim.tick();
@@ -117,3 +122,4 @@ public class FollowEnemy extends Enemy {
         return new Rectangle(x-24, y-24,64,64);
     }
 }
+*/

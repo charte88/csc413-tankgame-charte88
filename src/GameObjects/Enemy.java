@@ -6,8 +6,8 @@ public abstract class Enemy extends GameObject{
     private Handler handler;
     private int hp;
 
-    Enemy(int x, int y, ID id, SpriteSheet ss) {
-        super(x, y, id, ss);
+    Enemy(int x, int y, ID id, GlobalTexture tex) {
+        super(x, y, id, tex);
     }
 
     public void tick() { }

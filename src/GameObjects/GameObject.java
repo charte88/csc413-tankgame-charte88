@@ -6,13 +6,13 @@ public abstract class GameObject {
     int x, y;
     float velX = 0, velY = 0;
     protected ID id;
-    SpriteSheet ss;
+    protected GlobalTexture tex;
 
-    GameObject(int x, int y, ID id, SpriteSheet ss) {
+    GameObject(int x, int y, ID id, GlobalTexture tex) {
         this.x = x;
         this.y = y;
         this.id = id;
-        this.ss = ss;
+        this.tex = tex;
     }
 
     public abstract void tick();

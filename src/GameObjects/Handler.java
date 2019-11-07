@@ -1,25 +1,126 @@
 package GameObjects;
 
+import Game.Game;
+
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 
-public class Handler {
+public class Handler extends Component {
+    Game game;
+    GlobalTexture tex;
+
     public ArrayList<GameObject> object = new ArrayList<>();
+    public static ArrayList<Wall> wallList = new ArrayList<>();
+
+    Wall tempWall;
+    Crate ammoCrate;
+
+    private Image image, playBackground;
+    private MediaTracker tracker;
+    private URL url;
 
     private  boolean up = false, down = false, right = false, left = false, shoot = false;
     private  boolean up2 = false, down2 = false, right2 = false, left2 = false, shoot2 = false;
 
+    public Handler() { }
+
+    public Handler(Game game, GlobalTexture tex) {
+        this.game = game;
+        this.tex = tex;
+
+        addObject(new Crate(750,100, ID.Crate, tex));
+        addObject(new Crate(590,650, ID.Crate, tex));
+
+        for (int i = 0; i < 7; i++) {
+            addWall(new Wall(565 + 32 * i, 500, ID.Block, tex));
+            addWall(new Wall(100 + 32 * i, 500, ID.Block, tex));
+            addWall(new Wall(990 + 32 * i, 500, ID.Block, tex));
+            addWall(new Wall(532 + 32 * i, 500, ID.Block, tex));
+            addWall(new Wall(660, 30 + 32 * i, ID.Block, tex));
+            addWall(new Wall(660, 700 + 32 * i, ID.Block, tex));
+            addWall(new Wall(390, 405 + 32 * i, ID.Block, tex));
+            addWall(new Wall(900, 405 + 32 * i, ID.Block, tex));
+        }
+
+        for (int i = 0; i < 42; i++) {
+            addWall(new Wall(1 + 32 * i, 1, ID.Block, tex));
+            addWall(new Wall(1 + 32 * i, 958, ID.Block, tex));
+        }
+
+        for (int i = 0; i < 6; i++) {
+            addWall(new Wall(200 + 32 * i, 702, ID.Block, tex));
+            addWall(new Wall(100 + 32 * i, 286, ID.Block, tex));
+            addWall(new Wall(1000 + 32 * i, 702, ID.Block, tex));
+            addWall(new Wall(1000 + 32 * i, 286, ID.Block, tex));
+            addWall(new Wall(520, 100 + 32 * i, ID.Block, tex));
+            addWall(new Wall(520, 600 + 32 * i, ID.Block, tex));
+            addWall(new Wall(800, 100 + 32 * i, ID.Block, tex));
+            addWall(new Wall(800, 600 + 32 * i, ID.Block, tex));
+        }
+
+        for (int i = 0; i < 30; i++) {
+            addWall(new Wall(1240, 30 + 32 * i, ID.Block, tex));
+            addWall(new Wall(0, 30 + 32 * i, ID.Block, tex));
+        }
+    }
     public void tick() {
         for (int i=0; i<object.size(); i++) {
             GameObject tempObject = object.get(i);
             tempObject.tick();
         }
+
+        if (game.hp1 == 0 || game.hp2 == 0 ) {
+            for (int i=0; i<object.size(); i++) {
+                GameObject tempObject = object.get(i);
+                if (tempObject.getId() == ID.Crate) {
+                    removeObject(tempObject);
+                }
+            }
+            addObject(new Crate(750,100, ID.Crate, tex));
+            addObject(new Crate(590,650, ID.Crate, tex));
+        }
     }
 
     public void render(Graphics g) {
-        for (GameObject tempObject : object) {
+        for (int i=0; i<object.size(); i++) {
+            GameObject tempObject = object.get(i);
             tempObject.render(g);
         }
+    }
+    public void renderMap(int w, int h, Graphics2D g2) {
+
+        playBackground = getGameBG("/background2.png");
+        g2.drawImage(playBackground, 0, 0, 1920, 1000, this);
+
+
+        for (int i = 0; i < wallList.size(); i++) {
+            tempWall = wallList.get(i);
+            tempWall.render(g2);
+        }
+
+        //render(g2);
+        //Game.p.render(g2);
+        //Game.p2.render(g2);
+
+        //Game.p.tick();
+        //Game.p2.tick();
+    }
+
+    private Image getGameBG(String name) {
+        url = Game.class.getResource(name);
+        image = getToolkit().getImage(url);
+
+        try {
+            tracker = new MediaTracker(this);
+            tracker.addImage(image, 0);
+            tracker.waitForID(0);
+        } catch (InterruptedException e) { }
+        return image;
+    }
+
+    private void addWall(Wall instance) {
+        wallList.add(instance);
     }
 
     public void addObject(GameObject tempObject) {
@@ -28,6 +129,16 @@ public class Handler {
 
     public void removeObject(GameObject tempObject) {
         object.remove(tempObject);
+    }
+
+    public GameObject getTank(ID tankID) {
+        for (int i=0; i<object.size(); i++) {
+            GameObject tempObject = object.get(i);
+            if (tempObject.getId() == tankID) {
+                return tempObject;
+            }
+        }
+        return null;
     }
 
     public boolean isUp() {
