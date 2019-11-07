@@ -14,7 +14,7 @@ public class Handler extends Component {
     public static ArrayList<Wall> wallList = new ArrayList<>();
 
     Wall tempWall;
-    Crate ammoCrate;
+    //Crate ammoCrate;
 
     private Image image, playBackground;
     private MediaTracker tracker;
@@ -29,39 +29,52 @@ public class Handler extends Component {
         this.game = game;
         this.tex = tex;
 
-        addObject(new Crate(750,100, ID.Crate, tex));
-        addObject(new Crate(590,650, ID.Crate, tex));
+        addObject(new Crate(200,150, ID.Crate, tex));
+        addObject(new Crate(1100,150, ID.Crate, tex));
+        addObject(new Crate(200,800, ID.Crate, tex));
+        addObject(new Crate(1100,800, ID.Crate, tex));
 
-        for (int i = 0; i < 7; i++) {
-            addWall(new Wall(565 + 32 * i, 500, ID.Block, tex));
-            addWall(new Wall(100 + 32 * i, 500, ID.Block, tex));
-            addWall(new Wall(990 + 32 * i, 500, ID.Block, tex));
-            addWall(new Wall(532 + 32 * i, 500, ID.Block, tex));
-            addWall(new Wall(660, 30 + 32 * i, ID.Block, tex));
-            addWall(new Wall(660, 700 + 32 * i, ID.Block, tex));
-            addWall(new Wall(390, 405 + 32 * i, ID.Block, tex));
-            addWall(new Wall(900, 405 + 32 * i, ID.Block, tex));
-        }
-
+        ///////////////////////////////////////////////////////////
+        ///////////////////// Border Walls ///////////////////////
         for (int i = 0; i < 42; i++) {
-            addWall(new Wall(1 + 32 * i, 1, ID.Block, tex));
-            addWall(new Wall(1 + 32 * i, 958, ID.Block, tex));
-        }
-
-        for (int i = 0; i < 6; i++) {
-            addWall(new Wall(200 + 32 * i, 702, ID.Block, tex));
-            addWall(new Wall(100 + 32 * i, 286, ID.Block, tex));
-            addWall(new Wall(1000 + 32 * i, 702, ID.Block, tex));
-            addWall(new Wall(1000 + 32 * i, 286, ID.Block, tex));
-            addWall(new Wall(520, 100 + 32 * i, ID.Block, tex));
-            addWall(new Wall(520, 600 + 32 * i, ID.Block, tex));
-            addWall(new Wall(800, 100 + 32 * i, ID.Block, tex));
-            addWall(new Wall(800, 600 + 32 * i, ID.Block, tex));
+            addWall(new Wall(1 + 32 * i,1, ID.Block, tex));
+            addWall(new Wall(1 + 32 * i,958, ID.Block, tex));
         }
 
         for (int i = 0; i < 30; i++) {
-            addWall(new Wall(1240, 30 + 32 * i, ID.Block, tex));
-            addWall(new Wall(0, 30 + 32 * i, ID.Block, tex));
+            addWall(new Wall(0,30 + 32 * i, ID.Block, tex));
+            addWall(new Wall(1246,30 + 32 * i, ID.Block, tex));
+        }
+        /////////////////////////////////////////////////////////////
+        ////////////////// Horizontal Walls ////////////////////////
+        for (int i = 0; i < 5; i++) {
+            addWall(new Wall(150 + 32 * i,270, ID.Block, tex));
+            addWall(new Wall(980 + 32 * i,270, ID.Block, tex));
+
+            //// Breakable Walls ////
+            addWall(new BreakableBlock(595 + 32 * i,500, ID.BreakableBlock,this, tex));
+            ////////////////////////
+
+            addWall(new Wall(150 + 32 * i,702, ID.Block, tex));
+            addWall(new Wall(980 + 32 * i,702, ID.Block, tex));
+        }
+        /////////////////////////////////////////////////////////////
+        //////////////////// Vertical Walls ////////////////////////
+        for (int i = 0; i < 6; i++) {
+            addWall(new Wall(390,400 + 32 * i, ID.Block, tex));
+
+            //// Breakable Walls ////
+            addWall(new BreakableBlock(520,150 + 32 * i, ID.BreakableBlock,this, tex));
+            addWall(new BreakableBlock(520,635 + 32 * i, ID.BreakableBlock,this, tex));
+            ////////////////////////
+
+            addWall(new Wall(660,100 + 32 * i, ID.Block, tex));
+            addWall(new Wall(660,685 + 32 * i, ID.Block, tex));
+
+            addWall(new BreakableBlock(800,150 + 32 * i, ID.BreakableBlock,this, tex));
+            addWall(new BreakableBlock(800,635 + 32 * i, ID.BreakableBlock,this, tex));
+
+            addWall(new Wall(900,400 + 32 * i, ID.Block, tex));
         }
     }
     public void tick() {
@@ -105,6 +118,7 @@ public class Handler extends Component {
 
         //Game.p.tick();
         //Game.p2.tick();
+
     }
 
     private Image getGameBG(String name) {
@@ -121,6 +135,10 @@ public class Handler extends Component {
 
     private void addWall(Wall instance) {
         wallList.add(instance);
+    }
+
+    public void removeWall(Wall tempBreakWall) {
+        wallList.remove(tempBreakWall);
     }
 
     public void addObject(GameObject tempObject) {

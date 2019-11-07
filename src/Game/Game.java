@@ -22,8 +22,8 @@ public class Game extends Canvas implements Runnable {
     private Handler handler;
     private static Camera c1, c2;
 
-    public int ammo1 = 15;
-    public int ammo2 = 15;
+    public int ammo1 = 20;
+    public int ammo2 = 20;
 
     public int score = 0;
     public int score2 = 0;
@@ -79,8 +79,8 @@ public class Game extends Canvas implements Runnable {
 
         this.addKeyListener(new KeyInput(handler));
 
-        handler.addObject(new Tank(250,440, ID.Player, handler, this, tex));
-        handler.addObject(new Tank(980,440, ID.Player2, handler, this, tex));
+        handler.addObject(new Tank(200,500, ID.Player, handler, this, tex));
+        handler.addObject(new Tank(1050,500, ID.Player2, handler, this, tex));
 
         //p = new Tank(250,440, ID.Player, handler,this, tex);
         //p2 = new Tank(980,440, ID.Player2, handler, this, tex);
@@ -214,8 +214,8 @@ public class Game extends Canvas implements Runnable {
                 handler.addObject(new Tank(250,440, ID.Player, handler, this, tex));
                 handler.addObject(new Tank(980,440, ID.Player2, handler, this, tex));
 
-                ammo1 = 15;
-                ammo2 = 15;
+                ammo1 = 20;
+                ammo2 = 20;
             }
             if (hp2 > 0) {
                 g.setColor(Color.blue);
@@ -243,8 +243,8 @@ public class Game extends Canvas implements Runnable {
                 score++;
                 hp2 = 100;
                 hp1 = 100;
-                ammo1 = 15;
-                ammo2 = 15;
+                ammo1 = 20;
+                ammo2 = 20;
             }
         }
 
@@ -329,9 +329,9 @@ public class Game extends Canvas implements Runnable {
         return gameHeight;
     }
 
-    /*public BufferedImage getAmmo() {
+    public BufferedImage getAmmo() {
         return ammo;
-    }*/
+    }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Tank Wars");

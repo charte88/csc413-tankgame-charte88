@@ -21,14 +21,14 @@ public class GlobalTexture {
     private SpriteSheet spriteSheet1;
     private SpriteSheet wallSpriteSheet;
     private SpriteSheet breakableWall;
-    //private SpriteSheet ammoUp;
+    private SpriteSheet ammoUp;
 
     public GlobalTexture(Game game) {
         button = new SpriteSheetButton(game.getButtons());
         spriteSheet1 = new SpriteSheet(game.getSpriteSheet());
         wallSpriteSheet = new SpriteSheet(game.getWalls());
         breakableWall = new SpriteSheet(game.getBreakableWalls());
-        //ammoUp = new SpriteSheet(game.getAmmo());
+        ammoUp = new SpriteSheet(game.getAmmo());
         getSprites();
     }
 
@@ -66,7 +66,7 @@ public class GlobalTexture {
         brickWall = wallSpriteSheet.getSprite(1, 1, 32, 32);
         breakWall = breakableWall.getSprite(1, 1, 32, 32);
 
-        //ammoCrate = ammoUp.getSprite(1, 1, 32, 32);
+        ammoCrate = ammoUp.getSprite(1, 1, 32, 32);
 
     }
 }

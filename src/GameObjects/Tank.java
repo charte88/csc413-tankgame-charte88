@@ -162,7 +162,7 @@ public class Tank extends GameObject {
             /////////// Colliding with breakable walls ///////////////////////
             if (tempObject.getId() == ID.BreakableBlock) {
                 if (getBounds().intersects(tempObject.getBounds())) {
-                    handler.removeObject(tempObject);
+                    handler.removeWall(tempObject);
                 }
             }
         }
