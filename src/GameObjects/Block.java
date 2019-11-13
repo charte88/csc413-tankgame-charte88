@@ -1,30 +1,23 @@
-/*
 package GameObjects;
+
+import Game.ID;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Block extends GameObject {
-    private BufferedImage block_image;
-    public Block(int x, int y, ID id, SpriteSheet ss) {
-        super(x, y, id, ss);
-
-        block_image = ss.grabImage(5,2,32,32);
-
+    public Block(int x, int y, ID id, BufferedImage img) {
+        super(x, y, id, img);
     }
 
-    public void tick() {
-
-    }
+    public void tick() {}
 
     public void render(Graphics g) {
-        //g.setColor(Color.black);
-        //g.fillRect(x, y,32,32);
-        g.drawImage(block_image, x, y,null);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(this.img,x,y,32,32,null);
     }
 
     public Rectangle getBounds() {
         return new Rectangle(x, y,32,32);
     }
 }
-*/

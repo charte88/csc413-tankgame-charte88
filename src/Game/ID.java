@@ -1,4 +1,4 @@
-package GameObjects;
+package Game;
 
 public enum ID {
     Player(),
@@ -11,5 +11,11 @@ public enum ID {
     Bullet2(),
     Enemy(),
     MovableEnemy(),
-    FollowEnemy();
+    FollowEnemy(),
+    Start,
+    Help,
+    Menu,
+    ExtraLife,
+    GameOverP1,
+    GameOverP2;
 }

@@ -1,13 +1,17 @@
 package GameObjects;
 
-import java.awt.*;
+import Game.Handler;
+import Game.ID;
 
-public class BreakableBlock extends Wall {
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+public class BreakableBlock extends GameObject {
     private Handler handler;
     private int hp = 100;
 
-    public BreakableBlock(int x, int y, ID id, Handler handler, GlobalTexture tex) {
-        super(x, y, id, tex);
+    public BreakableBlock(int x, int y, ID id, Handler handler, BufferedImage img) {
+        super(x, y, id, img);
         this.handler = handler;
 
         //block_image = ss.grabImage(5,2,32,32);
@@ -19,26 +23,24 @@ public class BreakableBlock extends Wall {
     }
 
     private void collision() {
-        for (int i = 0; i<handler.object.size(); i++) {
+        for (int i=0; i<handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
-            if (tempObject.getId() == ID.Bullet || tempObject.getId() == ID.Bullet2) {
+            if (tempObject.getId() == ID.Bullet) {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     hp -= 100;
                     handler.removeObject(tempObject);
                 }
             }
         }
-        if (hp <= 0) handler.removeWall(this);
+        if (hp <= 0) handler.removeObject(this);
     }
 
     public void render(Graphics g) {
-        //g.setColor(Color.black);
-        //g.fillRect((int) x, (int) y,32,32);
-        g.drawImage(tex.breakWall, (int) x, (int) y,null);
-        tick();
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(this.img, x, y, 32, 32, null);
     }
 
     public Rectangle getBounds() {
-        return new Rectangle((int) x, (int) y,32,32);
+        return new Rectangle(x, y,32,32);
     }
 }

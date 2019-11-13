@@ -1,34 +1,22 @@
 package GameObjects;
 
-//import Game.Game;
-
-import Game.Game;
+import Game.Handler;
+import Game.ID;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import static javax.imageio.ImageIO.read;
 
 public class Bullet extends GameObject {
-    //private Game game;
     private Handler handler;
     private final int R = 3;
+    private int angle;
 
-    private BufferedImage bullet_image;
 
-
-    public Bullet(int x, int y, ID id, Handler handler, GlobalTexture tex, int angle) {
-        super(x, y, id, tex);
-        //this.game = game;
+    Bullet(int x, int y, ID id, Handler handler, BufferedImage img, int angle) {
+        super(x, y, id, img);
         this.handler = handler;
-
-        try {
-            bullet_image = read(new File("resources/redbullet.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.angle = angle;
 
         //speed
         this.velX = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
@@ -36,15 +24,15 @@ public class Bullet extends GameObject {
     }
 
     public void tick() {
-        this.x += velX;
-        this.y += velY;
+        x += velX;
+        y += velY;
 
         collision();
     }
 
     private void collision() {
-        for (int i = 0; i<Handler.wallList.size(); i++) {
-            Wall tempObject = Handler.wallList.get(i);
+        for (int i=0; i<handler.object.size(); i++) {
+            GameObject tempObject = handler.object.get(i);
 
             if (tempObject.getId() == ID.Block)  {
                 if (getBounds().intersects(tempObject.getBounds())) {
@@ -56,18 +44,20 @@ public class Bullet extends GameObject {
     }
 
     public void render(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
+        rotation.rotate(Math.toRadians(angle), 0, 0);
+        g2.drawImage(this.img, rotation, null);
+
         //g.setColor(Color.green);
         //g.fillOval(x, y, 20,20);
 
-        //Graphics2D g2d = (Graphics2D) g;
-        //g.setColor(Color.white);
-        //g2d.draw(getBounds());
-
-        g.drawImage(bullet_image, this.x, this.y, null);
-        tick();
+        Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.white);
+        g2d.draw(getBounds());
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(this.x, this.y,20,20);
+        return new Rectangle(x, y,16,16);
     }
 }

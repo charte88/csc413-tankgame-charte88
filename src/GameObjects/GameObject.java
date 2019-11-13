@@ -1,18 +1,21 @@
 package GameObjects;
 
+import Game.ID;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
     int x, y;
     float velX = 0, velY = 0;
     protected ID id;
-    protected GlobalTexture tex;
+    BufferedImage img;
 
-    GameObject(int x, int y, ID id, GlobalTexture tex) {
+    GameObject(int x, int y, ID id, BufferedImage img) {
         this.x = x;
         this.y = y;
         this.id = id;
-        this.tex = tex;
+        this.img = img;
     }
 
     public abstract void tick();
