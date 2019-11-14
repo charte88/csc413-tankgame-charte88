@@ -10,12 +10,11 @@ public enum ID {
     Bullet(),
     Bullet2(),
     Enemy(),
-    MovableEnemy(),
-    FollowEnemy(),
     Start,
     Help,
     Menu,
+    Credits,
     ExtraLife,
     GameOverP1,
-    GameOverP2;
+    GameOverP2 ;
 }

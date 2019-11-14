@@ -6,37 +6,32 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class Help extends MouseAdapter {
-
     private BufferedImage img;
     private TRE tre;
-    public Help(BufferedImage img, TRE tre){
 
+    Help(BufferedImage img, TRE tre) {
         this.img = img;
         this.tre = tre;
-
     }
-    public void mousePressed(MouseEvent e){
+
+    public void mousePressed(MouseEvent e) {
         int mx = e.getX();
         int my = e.getY();
 
-        if(mouseOver(mx,my,40,20,100,100)){
+        if (mouseOver(mx, my,40,20,100,100)) {
             tre.setId(ID.Menu);
         }
-
-
-
-
     }
-    private boolean mouseOver(int mx, int my, int x, int y, int width, int height){
-        if(mx > x && mx < x+width ){
-            if(my > y && my <y +height){
+
+    private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
+        if (mx > x && mx < x+width ) {
+            if (my > y && my <y +height){
                 return true;
-            }else return false;
-
-        }else return false;
-
+            } else return false;
+        } else return false;
     }
-    public void drawImage(Graphics g){
+
+    public void drawImage(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(img,0,0,1280,960,null);
     }

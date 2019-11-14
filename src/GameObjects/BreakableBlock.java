@@ -13,9 +13,6 @@ public class BreakableBlock extends GameObject {
     public BreakableBlock(int x, int y, ID id, Handler handler, BufferedImage img) {
         super(x, y, id, img);
         this.handler = handler;
-
-        //block_image = ss.grabImage(5,2,32,32);
-
     }
 
     public void tick() {

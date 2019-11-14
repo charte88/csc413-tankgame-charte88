@@ -13,7 +13,7 @@ public class Tank extends GameObject {
     private BufferedImage bullet;
 
     private int vx, vy, angle;
-    private int life = 3;
+    private int life = 1;
     private int health = 100;
     private int ammo = 20;
     
@@ -34,12 +34,12 @@ public class Tank extends GameObject {
     private boolean LeftPressed;
     private boolean ShootPressed;
 
-    public Tank(int x, int y, ID id, Handler handler, BufferedImage img, BufferedImage bullet) {
+    public Tank(int x, int y, ID id, Handler handler, BufferedImage img, int angle, BufferedImage bullet) {
         super(x, y, id, img);
         this.handler = handler;
+        this.angle = angle;
         this.bullet = bullet;
 
-        angle = 0;
         vx = 0;
         vy = 0;
     }
@@ -116,8 +116,6 @@ public class Tank extends GameObject {
         }
 
         collision();
-
-        //anim.tick();
     }
 
     private void shootBullet() {
@@ -268,13 +266,9 @@ public class Tank extends GameObject {
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
                         if (overshield2Timer()) {
-                            System.out.println("Player2 Health: " + this.health);
                             this.health -= 10;
-                            System.out.println("Player2 Health: " + this.health);
                         } else {
-                            System.out.println("Player2 Health: " + this.health);
                             this.health -= 20;
-                            System.out.println("Player2 Health: " + this.health);
                         }
                         handler.removeObject(tempObject);
                     }
@@ -285,13 +279,9 @@ public class Tank extends GameObject {
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
                         if (overshield1Timer()) {
-                            System.out.println("Player1 Health: " + this.health);
                             this.health -= 10;
-                            System.out.println("Player1 Health: " + this.health);
                         } else {
-                            System.out.println("Player1 Health: " + this.health);
                             this.health -= 20;
-                            System.out.println("Player1 Health: " + this.health);
                         }
                         handler.removeObject(tempObject);
                     }
@@ -332,10 +322,6 @@ public class Tank extends GameObject {
     }
     private void addLife() {
         this.life+=1;
-    }
-
-    public void setHealth(int health) {
-        this.health += health;
     }
 
     public boolean isGameOver() {

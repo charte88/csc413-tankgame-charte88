@@ -9,14 +9,11 @@ public class Overshield extends GameObject {
 
     public Overshield(int x, int y, ID id, BufferedImage img) {
         super(x, y, id, img);
-
     }
 
     public void tick() { }
 
     public void render(Graphics g) {
-        //g.setColor(Color.cyan);
-        //g.fillRect(x, y, 32,32);
         g.drawImage(img, x, y,null);
     }
 

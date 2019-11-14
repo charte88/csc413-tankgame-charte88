@@ -49,15 +49,12 @@ public class Bullet extends GameObject {
         rotation.rotate(Math.toRadians(angle), 0, 0);
         g2.drawImage(this.img, rotation, null);
 
-        //g.setColor(Color.green);
-        //g.fillOval(x, y, 20,20);
-
-        Graphics2D g2d = (Graphics2D) g;
+        /*Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.white);
-        g2d.draw(getBounds());
+        g2d.draw(getBounds());*/
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y,16,16);
+        return new Rectangle(x, y, img.getWidth(), img.getHeight());
     }
 }

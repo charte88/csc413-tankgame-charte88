@@ -11,7 +11,6 @@ public class Camera {
         this.x = x;
         this.y = y;
     }
-    //graphics2D method
 
     public void tick(Tank object) {
         x += ((object.getX() - x) - 640 / 2) * 0.05f;
@@ -20,9 +19,7 @@ public class Camera {
         if (x >= (1280 * 2)) x = (1280 * 2);
         if (y <= 0) y = 0;
         if (y >= 960) y = 960;
-
     }
-
 
     public void setX(float x) {
         this.x = x;
