@@ -10,22 +10,25 @@ import java.awt.image.BufferedImage;
 
 public class Tank extends GameObject {
     private Handler handler;
+    private BufferedImage overshield;
     private BufferedImage bullet;
 
     private int vx, vy, angle;
-    private int life = 1;
+    private int life = 3;
     private int health = 100;
     private int ammo = 20;
     
     private final int R = 2;
     private final int ROTATIONSPEED = 2;
 
-
-    private boolean isOvershieldPlayer1 = false;
-    private boolean isOvershieldPlayer2 = false;
+    private boolean isDisplayAmmoPickup = false;
+    private boolean isDisplayOvershieldPickup = false;
+    private boolean isDisplayExtraLifePickup = false;
     private boolean gameOver = false;
 
-    private long lastTrueTime = 0;
+    private long lastTrueTimeOvershield = 0;
+    private long lastTrueTimeAmmo = 0;
+    private long lastTrueTimeExtraLife = 0;
     private long lastFired = 0;
 
     private boolean UpPressed;
@@ -34,9 +37,10 @@ public class Tank extends GameObject {
     private boolean LeftPressed;
     private boolean ShootPressed;
 
-    public Tank(int x, int y, ID id, Handler handler, BufferedImage img, int angle, BufferedImage bullet) {
+    public Tank(int x, int y, ID id, Handler handler, BufferedImage img, BufferedImage overshield, int angle, BufferedImage bullet) {
         super(x, y, id, img);
         this.handler = handler;
+        this.overshield = overshield;
         this.angle = angle;
         this.bullet = bullet;
 
@@ -191,6 +195,8 @@ public class Tank extends GameObject {
                 // Player 1 colliding with ammo crate
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
+                        this.isDisplayAmmoPickup = true;
+                        this.lastTrueTimeAmmo = System.currentTimeMillis();
                         this.ammo += 10;
                         handler.removeObject(tempObject);
                     }
@@ -198,6 +204,8 @@ public class Tank extends GameObject {
                 // Player 2 colliding with ammo crate
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
+                        this.isDisplayAmmoPickup = true;
+                        this.lastTrueTimeAmmo = System.currentTimeMillis();
                         this.ammo += 10;
                         handler.removeObject(tempObject);
                     }
@@ -210,16 +218,16 @@ public class Tank extends GameObject {
                 // Player 1 colliding with overshield powerup
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        isOvershieldPlayer1 = true;
-                        lastTrueTime = System.currentTimeMillis();
+                        isDisplayOvershieldPickup = true;
+                        this.lastTrueTimeOvershield = System.currentTimeMillis();
                         handler.removeObject(tempObject);
                     }
                 }
                 // Player 2 colliding with overshield powerup
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        isOvershieldPlayer2 = true;
-                        lastTrueTime = System.currentTimeMillis();
+                        isDisplayOvershieldPickup = true;
+                        this.lastTrueTimeOvershield = System.currentTimeMillis();
                         handler.removeObject(tempObject);
                     }
                 }
@@ -229,6 +237,8 @@ public class Tank extends GameObject {
             /////////////// Colliding with ExtraLife //////////////////////////
             if (tempObject.getId() == ID.ExtraLife) {
                 if (getBounds().intersects(tempObject.getBounds())) {
+                    this.isDisplayExtraLifePickup = true;
+                    this.lastTrueTimeExtraLife = System.currentTimeMillis();
                     addLife();
                     handler.removeObject(tempObject);
                 }
@@ -240,7 +250,7 @@ public class Tank extends GameObject {
                 // Player 1 colliding with enemy
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        if (overshield1Timer()) {
+                        if (isOvershieldPickup()) {
                             this.health--;
                         } else {
                             this.health -= 2;
@@ -250,7 +260,7 @@ public class Tank extends GameObject {
                 // Player 2 colliding with enemy
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        if (overshield2Timer()) {
+                        if (isOvershieldPickup()) {
                             this.health--;
                         } else {
                             this.health -= 2;
@@ -265,7 +275,7 @@ public class Tank extends GameObject {
             if (tempObject.getId() == ID.Bullet) {
                 if (id == ID.Player2) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        if (overshield2Timer()) {
+                        if (isOvershieldPickup()) {
                             this.health -= 10;
                         } else {
                             this.health -= 20;
@@ -278,7 +288,7 @@ public class Tank extends GameObject {
             if (tempObject.getId() == ID.Bullet2) {
                 if (id == ID.Player) {
                     if (getBounds().intersects(tempObject.getBounds())) {
-                        if (overshield1Timer()) {
+                        if (isOvershieldPickup()) {
                             this.health -= 10;
                         } else {
                             this.health -= 20;
@@ -319,6 +329,24 @@ public class Tank extends GameObject {
         g.setFont(new Font("arial", Font.BOLD, 12));
         g.drawString("Lives : " + life + " [ " + ammo + " ]", x, y + 90);
 
+        if (isDisplayAmmoPickup()) {
+            g.setColor(Color.DARK_GRAY);
+            g.setFont(new Font("arial", Font.BOLD, 24));
+            g.drawString("Ammo!", x, y + -25);
+        }
+        if (isOvershieldPickup()) {
+            if (id == ID.Player) {
+                g2d.drawImage(overshield, x, y - 11, null);
+            }
+            if (id == ID.Player2) {
+                g2d.drawImage(overshield, x - 12, y - 10, null);
+            }
+        }
+        if (isDisplayExtraLifePickup()) {
+            g.setColor(Color.cyan);
+            g.setFont(new Font("arial", Font.BOLD, 24));
+            g.drawString("Extra Life!", x, y + 130);
+        }
     }
     private void addLife() {
         this.life+=1;
@@ -328,23 +356,31 @@ public class Tank extends GameObject {
         return gameOver;
     }
 
+    private boolean isDisplayAmmoPickup() {
+        if (System.currentTimeMillis() - this.lastTrueTimeAmmo > 5000) {
+            this.isDisplayAmmoPickup = false;
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isOvershieldPickup() {
+        if (System.currentTimeMillis() - this.lastTrueTimeOvershield > 20000) {
+            isDisplayOvershieldPickup = false;
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isDisplayExtraLifePickup() {
+        if (System.currentTimeMillis() - this.lastTrueTimeExtraLife > 5000) {
+            this.isDisplayExtraLifePickup = false;
+            return false;
+        }
+        return true;
+    }
+
     public Rectangle getBounds() {
         return new Rectangle(x, y, this.img.getWidth(),this.img.getHeight());
-    }
-
-    private boolean overshield1Timer() {
-        if (System.currentTimeMillis() - lastTrueTime > 20000) {
-            isOvershieldPlayer1 = false;
-            return false;
-        }
-        return true;
-    }
-
-    private boolean overshield2Timer() {
-        if (System.currentTimeMillis() - lastTrueTime > 20000) {
-            isOvershieldPlayer2 = false;
-            return false;
-        }
-        return true;
     }
 }

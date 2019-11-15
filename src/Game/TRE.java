@@ -13,8 +13,8 @@ import java.io.IOException;
 import static javax.imageio.ImageIO.read;
 
 public class TRE extends JPanel {
-    public static final int SCREEN_WIDTH = 1280;
-    public static final int SCREEN_HEIGHT = 960;
+    private static final int SCREEN_WIDTH = 1280;
+    private static final int SCREEN_HEIGHT = 960;
 
     private BufferedImage world;
     private BufferedImage menuBack;
@@ -36,7 +36,6 @@ public class TRE extends JPanel {
     private Menu menu;
     private Help help;
     private Credits credits;
-    //private Music music;
 
     private static Graphics2D buffer;
     private JFrame jf;
@@ -49,15 +48,15 @@ public class TRE extends JPanel {
     }
 
     private void init() {
-        this.jf = new JFrame("Tank Wars");
+        this.jf = new JFrame("DGD Wars");
         this.world = new BufferedImage((TRE.SCREEN_WIDTH * 2)+300, (TRE.SCREEN_HEIGHT * 2) + 100, BufferedImage.TYPE_INT_RGB);
-        BufferedImage t1img = null, t2img = null, bullet = null;
+        BufferedImage t1img = null, t2img = null, bubble = null, bullet = null;
         try {
-            //BufferedImage tmp;
             System.out.println(System.getProperty("user.dir"));
 
             t1img = read(new File("resources/DGDTank1.png"));
             t2img = read(new File("resources/DGDTank2.1.png"));
+            bubble = read(new File("resources/Bubble.png"));
             floor = read(new File("resources/DGDBackground.png"));
             wall = read(new File("resources/DGDWall.png"));
             breakable = read(new File("resources/DGDWood.png"));
@@ -76,11 +75,8 @@ public class TRE extends JPanel {
         }
         handler = new Handler(this);
 
-        //music = new Music();
-        //music.playMusic();
-
-        handler.addObject(new Tank(300,810, ID.Player, handler, t1img,0, bullet));
-        handler.addObject(new Tank(2260,810, ID.Player2, handler, t2img,180, bullet));
+        handler.addObject(new Tank(300,810, ID.Player, handler, t1img, bubble,0, bullet));
+        handler.addObject(new Tank(2260,810, ID.Player2, handler, t2img, bubble,180, bullet));
 
         TankControl tc1 = new TankControl(handler.getTanks(ID.Player), KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         TankControl tc2 = new TankControl(handler.getTanks(ID.Player2), KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);

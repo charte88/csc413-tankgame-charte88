@@ -28,7 +28,7 @@ public class Handler {
         }
     }
 
-    public GameObjects.Tank getTanks(ID id) {
+    GameObjects.Tank getTanks(ID id) {
         for (GameObject temp : object) {
             if (temp.getId() == id) {
                 return (GameObjects.Tank) temp;

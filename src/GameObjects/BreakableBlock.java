@@ -28,6 +28,12 @@ public class BreakableBlock extends GameObject {
                     handler.removeObject(tempObject);
                 }
             }
+            if (tempObject.getId() == ID.Bullet2) {
+                if (getBounds().intersects(tempObject.getBounds())) {
+                    hp -= 100;
+                    handler.removeObject(tempObject);
+                }
+            }
         }
         if (hp <= 0) handler.removeObject(this);
     }
@@ -38,6 +44,6 @@ public class BreakableBlock extends GameObject {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y,32,32);
+        return new Rectangle(x, y, img.getWidth(), img.getHeight());
     }
 }

@@ -39,7 +39,6 @@ public class Bullet extends GameObject {
                     handler.removeObject(this);
                 }
             }
-
         }
     }
 
@@ -48,10 +47,6 @@ public class Bullet extends GameObject {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), 0, 0);
         g2.drawImage(this.img, rotation, null);
-
-        /*Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.white);
-        g2d.draw(getBounds());*/
     }
 
     public Rectangle getBounds() {
