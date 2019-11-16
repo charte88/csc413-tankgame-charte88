@@ -332,7 +332,7 @@ public class Tank extends GameObject {
         if (isDisplayAmmoPickup()) {
             g.setColor(Color.DARK_GRAY);
             g.setFont(new Font("arial", Font.BOLD, 24));
-            g.drawString("Ammo!", x, y + -25);
+            g.drawString("Ammo +10", x, y + -25);
         }
         if (isOvershieldPickup()) {
             if (id == ID.Player) {
@@ -357,7 +357,7 @@ public class Tank extends GameObject {
     }
 
     private boolean isDisplayAmmoPickup() {
-        if (System.currentTimeMillis() - this.lastTrueTimeAmmo > 5000) {
+        if (System.currentTimeMillis() - this.lastTrueTimeAmmo > 500) {
             this.isDisplayAmmoPickup = false;
             return false;
         }
@@ -373,7 +373,7 @@ public class Tank extends GameObject {
     }
 
     private boolean isDisplayExtraLifePickup() {
-        if (System.currentTimeMillis() - this.lastTrueTimeExtraLife > 5000) {
+        if (System.currentTimeMillis() - this.lastTrueTimeExtraLife > 500) {
             this.isDisplayExtraLifePickup = false;
             return false;
         }
